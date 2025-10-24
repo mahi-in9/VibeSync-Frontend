@@ -17,9 +17,16 @@ import Footer from './components/Footer'
 const App = () => {
   return (
     <div>
-      <Navbar/>
-      <Routes>
-        {/* Define your routes here */}
+      
+      <div>
+        <Routes>
+          <Route path="/Signin" element={<Signin/>} />
+          <Route path="/Signup" element={<Signup/>} />
+        </Routes>
+      </div>
+      <div>
+        <Navbar/>
+        <Routes>
         <Route path="/" element={<Home/>} />
         <Route path="/features" element={<Features/>} />
         <Route path="/Groups" element={<Groups/>} />
@@ -29,10 +36,12 @@ const App = () => {
         <Route path="/Team" element={<Team/>} />
         <Route path="/TermofServices" element={<TermofServices/>} />
         <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
-        <Route path="/Signin" element={<Signin/>} />
-        <Route path="/Signup" element={<Signup/>} />
+        
       </Routes>
       <Footer/>
+      </div>
+
+      
     </div>
   )
 }
