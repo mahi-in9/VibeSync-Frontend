@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Card from "./Card";
-import styled from "styled-components";
+import { CTAContent,CTAButton} from "./StyleWrapper";
 import { ArrowRight } from "lucide-react";
+import Image from "../assets/meeting-2.jpg"
 
 const featuresData = [
   {
@@ -62,27 +63,27 @@ const HeroFeatures = () => {
               </CTAButton>
             </Link>
             <Link to="/how-it-works">
-  <button
-    style={{
-      background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
-      color: "#6b4eff",
-      padding: "12px 32px",
-      borderRadius: "1rem",
-      fontWeight: "600",
-      border: "none",
-      transition: "all 0.3s ease",
-      cursor: "pointer",
-    }}
-    onMouseOver={(e) => {
-      e.currentTarget.style.opacity = "0.9";
-    }}
-    onMouseOut={(e) => {
-      e.currentTarget.style.opacity = "1";
-    }}
-  >
-    See How It Works
-  </button>
-</Link>
+              <button
+                style={{
+                  background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+                  color: "#6b4eff",
+                  padding: "12px 32px",
+                  borderRadius: "1rem",
+                  fontWeight: "600",
+                  border: "none",
+                  transition: "all 0.3s ease",
+                  cursor: "pointer",
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.opacity = "0.9";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                }}
+              >
+                See How It Works
+              </button>
+            </Link>
 
           </div>
 
@@ -96,17 +97,14 @@ const HeroFeatures = () => {
           </div>
         </div>
 
-        {/* Right Image */}
         <div className="md:w-1/2 flex justify-center md:justify-end">
           <img
-            src="https://illustrations.popsy.co/violet/people-meeting.svg"
+            src={Image}
             alt="Planning illustration"
             className="max-w-sm md:max-w-md drop-shadow-2xl rounded-xl"
           />
         </div>
       </div>
-
-      {/* Features Section */}
       <div className="relative z-10 w-full text-center px-4 sm:px-6 lg:px-8 mt-16">
         <h2 className="text-4xl font-bold mb-4">
           Everything You Need to <span className="text-[#6b4eff]">Plan Together</span>
@@ -140,49 +138,6 @@ const HeroFeatures = () => {
 
 export default HeroFeatures;
 
-// Styled Components
-const CTAContent = styled.div`
-  max-width: 700px;
-  color: #5e44b3ff;
-  text-align: center;
-  margin-top: 60px;
 
-  h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
-  }
 
-  p {
-    font-size: 1.2rem;
-    color: gray;
-    margin-bottom: 40px;
-    line-height: 1.6;
-  }
-`;
 
-const CTAButton = styled.button`
-  background-color: #6b4eff;
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 14px 30px;
-  border-radius: 2em;
-  cursor: pointer;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  box-shadow: 1px 5px 0 0 #4e36b8;
-  transition: all 0.2s ease;
-
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 1px 8px 0 0 #4e36b8;
-  }
-
-  &:active {
-    transform: translateY(3px);
-    box-shadow: 0 0 0 0 #4e36b8;
-  }
-`;

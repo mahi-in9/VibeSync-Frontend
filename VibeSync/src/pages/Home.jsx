@@ -7,7 +7,7 @@ const Home = () => {
     <div>
         <Hero/>
        
-        {/* <Chat/> */}
+      
     </div>
   )
 }
