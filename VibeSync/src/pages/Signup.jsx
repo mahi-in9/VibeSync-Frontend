@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { StyledButton } from "../components/StyleWrapper";
 import { useAuth } from "../context/AuthContext";
+import { registerApi } from "../apis/api";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Signup = () => {
       setLoading(true);
 
       const response = await fetch(
-        "https://vibesync-backend-1.onrender.com/api/auth/register",
+        `${registerApi}`,
         {
           method: "POST",
           headers: {

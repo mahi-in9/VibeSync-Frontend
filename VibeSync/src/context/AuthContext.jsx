@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { loginApi,meApi } from '../apis/api';
 
 const AuthContext = createContext(null);
 
@@ -27,23 +28,20 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch('https://vibesync-backend-1.onrender.com/api/auth/me', {
+      const res = await fetch(`${meApi}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.ok) {
         const data = await res.json();
         setUser(data);
+        localStorage.setItem('vibeSyncUser', JSON.stringify(data));
       } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('vibeSyncUser');
-        setUser(null);
+        logout();
       }
     } catch (err) {
       console.error('Auth check failed:', err);
-      localStorage.removeItem('token');
-      localStorage.removeItem('vibeSyncUser');
-      setUser(null);
+      logout();
     } finally {
       setLoading(false);
     }
@@ -51,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await fetch(
-      'https://vibesync-backend-1.onrender.com/api/auth/login',
+      `${loginApi}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -68,10 +66,10 @@ export const AuthProvider = ({ children }) => {
     if (data.token) {
       localStorage.setItem('token', data.token);
     }
-    
-    localStorage.setItem('vibeSyncUser', JSON.stringify(data));
+
+    localStorage.setItem('vibeSyncUser', JSON.stringify(data.user || data));
     setUser(data.user || data);
-    
+
     return data;
   };
 
@@ -88,17 +86,18 @@ export const AuthProvider = ({ children }) => {
     logout,
     checkAuth,
   };
-
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '18px',
-        color: '#6b4eff'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          fontSize: '18px',
+          color: '#6b4eff',
+        }}
+      >
         Loading...
       </div>
     );

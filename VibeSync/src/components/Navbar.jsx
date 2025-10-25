@@ -84,7 +84,9 @@ const Navbar = () => {
                  
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-3 w-44 bg-white border border-gray-100 rounded-xl shadow-xl">
+                  <div className="absolute right-0 mt-3 w-44 bg-white border border-gray-100 rounded-xl shadow-xl"
+                  
+                  >
                    
                     <Link
                       to="/profile"

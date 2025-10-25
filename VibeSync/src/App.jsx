@@ -15,34 +15,39 @@ import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import ForgotPassword from './pages/ForgotPassword';
+import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
+import Profile from './pages/Profile';
 
 const App = () => {
   const location = useLocation();
-  
-  // Check if current route is signin or signup
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup';
 
   return (
     <div>
-      {/* Show Navbar and Footer only on non-auth pages */}
       {!isAuthPage && <Navbar />}
-      
+
       <Routes>
+        {/* Public Pages */}
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/features" element={<Features />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/setting" element={<Setting />} />
         <Route path="/helpcenter" element={<Helpcenter />} />
         <Route path="/team" element={<Team />} />
         <Route path="/termofservices" element={<TermofServices />} />
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/signin" element={<PublicRoute element={Signin} />} />
+        <Route path="/signup" element={<PublicRoute element={Signup} />} />
+
+        {/* Protected Routes */}
+        <Route path="/dashboard" element={<ProtectedRoute element={Dashboard} />} />
+        <Route path='/profile' element = {<Profile element = {Profile} />} />
+        <Route path="/setting" element={<ProtectedRoute element={Setting} />} />
+        <Route path="/events" element={<ProtectedRoute element={Events} />} />
+        <Route path="/groups" element={<ProtectedRoute element={Groups} />} />
       </Routes>
-      
+
       {!isAuthPage && <Footer />}
     </div>
   );
