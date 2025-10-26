@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { getProfileApi,updateProfileApi } from "../apis/api";
+import { getProfileApi, updateProfileApi } from "../apis/api";
+import { getDatabase, ref, onValue, off } from "firebase/database";
 
 const Profile = () => {
   const { user, checkAuth } = useAuth();
   const [avatar, setAvatar] = useState(user?.avatar || "");
   const [groupsCount, setGroupsCount] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [messagesCount, setMessagesCount] = useState(0);
   const [newAvatar, setNewAvatar] = useState(null);
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState("Fetching location...");
@@ -15,25 +16,46 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setAvatar(user.avatar || "");
-      setGroupsCount(user.groups?.length || 0);
-      fetchMessages();
       fetchLocation();
+      fetchGroupAndMessageCounts();
     }
   }, [user]);
 
-  const fetchMessages = async () => {
+  // 🔹 Get real-time counts of groups and messages
+  const fetchGroupAndMessageCounts = () => {
     if (!user?._id) return;
-    try {
-      const res = await fetch(
-        `${getProfileApi}/messages/${user._id}`
+    const db = getDatabase();
+
+    const groupRef = ref(db, "groups");
+    const messageRef = ref(db, "messages");
+
+    const handleGroups = onValue(groupRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      let count = 0;
+      Object.values(data).forEach((g) => {
+        if (g.members && Object.values(g.members).includes(user._id)) {
+          count++;
+        }
+      });
+      setGroupsCount(count);
+    });
+
+    const handleMessages = onValue(messageRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      const userMsgs = Object.values(data).filter(
+        (m) => m.senderId === user._id || m.receiverId === user._id
       );
-      const data = await res.json();
-      setMessages(data || []);
-    } catch (err) {
-      console.error("Failed to fetch messages:", err);
-    }
+      setMessagesCount(userMsgs.length);
+    });
+
+    // Cleanup listeners
+    return () => {
+      off(groupRef);
+      off(messageRef);
+    };
   };
 
+  // 🔹 Fetch location
   const fetchLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -49,25 +71,21 @@ const Profile = () => {
               data.address?.city ||
               data.address?.town ||
               data.address?.village ||
-              data.address?.county ||
               data.address?.state ||
-              "Nearby location not found";
+              "Unknown";
             setLocation(displayName);
-          } catch (err) {
-            console.error(err);
+          } catch {
             setLocation("Unable to fetch location");
           }
         },
-        (error) => {
-          console.error(error);
-          setLocation("Location access denied");
-        }
+        () => setLocation("Location access denied")
       );
     } else {
       setLocation("Geolocation not supported");
     }
   };
 
+  // 🔹 Avatar upload
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -79,25 +97,18 @@ const Profile = () => {
   const handleAvatarUpload = async () => {
     if (!newAvatar) return;
     const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You are not logged in");
-      return;
-    }
+    if (!token) return alert("You are not logged in");
 
     setLoading(true);
     const formData = new FormData();
     formData.append("avatar", newAvatar);
 
     try {
-      const res = await fetch(
-        `${updateProfileApi}/users/avatar`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        }
-      );
-
+      const res = await fetch(`${updateProfileApi}/users/avatar`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
       const data = await res.json();
       if (res.ok) {
         setAvatar(data.avatar);
@@ -118,18 +129,19 @@ const Profile = () => {
   return (
     <div
       className="min-h-screen flex items-center justify-center p-6"
-       style={{
+      style={{
         background:
           "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
       }}
     >
-      <div className="w-full max-w-4xl  rounded-2xl shadow-xl overflow-hidden"
-       style={{
-        background:
-          "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
-      }}
+      <div
+        className="w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden"
+        style={{
+          background:
+            "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+        }}
       >
-        {/* Header / Avatar */}
+        {/* Header */}
         <div className="relative bg-pink-400 h-36">
           <div className="absolute bottom-0 left-6 -mb-12">
             <img
@@ -147,7 +159,9 @@ const Profile = () => {
               <h2 className="text-3xl font-bold text-black">{user?.name}</h2>
               <p className="text-black mt-1">{user?.email}</p>
               <p className="text-black text-sm mt-1">Role: {user?.role}</p>
-              <p className="text-black text-sm mt-1">Current Location: {location}</p>
+              <p className="text-black text-sm mt-1">
+                Current Location: {location}
+              </p>
             </div>
 
             {/* Avatar Upload */}
@@ -168,54 +182,25 @@ const Profile = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="mt-8 flex flex-wrap gap-6"
-          
-          >
-            <div className="flex-1 min-w-[120px]  rounded-xl p-4 text-center shadow hover:shadow-md transition"
-             style={{
-        background:
-          "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
-      }}
+          <div className="mt-8 flex flex-wrap gap-6">
+            <div className="flex-1 min-w-[120px] rounded-xl p-4 text-center shadow hover:shadow-md transition"
+              style={{
+                background:
+                  "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+              }}
             >
               <h3 className="text-lg font-semibold text-black">Groups</h3>
               <p className="text-2xl font-bold text-black">{groupsCount}</p>
             </div>
-            <div className="flex-1 min-w-[120px] bg-pink-50 rounded-xl p-4 text-center shadow hover:shadow-md transition"
-             style={{
-        background:
-          "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
-      }}
+            <div className="flex-1 min-w-[120px] rounded-xl p-4 text-center shadow hover:shadow-md transition"
+              style={{
+                background:
+                  "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+              }}
             >
               <h3 className="text-lg font-semibold text-black">Messages</h3>
-              <p className="text-2xl font-bold text-black">{messages.length}</p>
+              <p className="text-2xl font-bold text-black">{messagesCount}</p>
             </div>
-          </div>
-
-          {/* Messages List */}
-          <div className="mt-8"
-         
-          >
-            <h3 className="text-xl font-semibold text-black mb-4">Messages</h3>
-            {messages.length === 0 ? (
-              <p className="text-black">No messages yet.</p>
-            ) : (
-              <ul className="space-y-3">
-                {messages.map((msg, index) => (
-                  <li
-                    key={msg._id || index}
-                    className="p-4 border rounded-xl shadow-sm hover:shadow-md transition bg-pink-50"
-                  >
-                    <p className="text-black">
-                      <span className="font-semibold">{msg.senderName}:</span>{" "}
-                      {msg.text}
-                    </p>
-                    <p className="text-xs text-black mt-1">
-                      {new Date(msg.createdAt).toLocaleString()}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         </div>
       </div>
