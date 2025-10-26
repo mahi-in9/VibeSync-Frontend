@@ -1,4 +1,4 @@
-export const api = "http://localhost:8000/api";
+export const api = "https://vibesync-backend-2.onrender.com/api";
 
 /* -------------------------- AUTH ROUTES -------------------------- */
 export const loginApi = `${api}/auth/login`;
@@ -65,7 +65,7 @@ export const closePollApi = (pollId) => `${api}/polls/${pollId}/close`;
 export const sendMessageApi = `${api}/messages`;
 export const getMessagesByGroupApi = (groupId) => `${api}/messages/${groupId}`;
 export const deleteMessageApi = (messageId) => `${api}/messages/${messageId}`;
-<<<<<<< HEAD
+// <<<<<<< HEAD
 
 export const fetchMovies = async () => {
   try {
@@ -89,5 +89,5 @@ export const fetchMovies = async () => {
 };
 
 export const geminiApi = "AIzaSyACW742hbTpcZ20mRuinjLtjnMZHgJijpU"
-=======
->>>>>>> main
+// =======
+// >>>>>>> main
