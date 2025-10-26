@@ -1,128 +1,149 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-
-// Dummy group data
-const groups = ["Friends", "Work Buddies", "Movie Club"];
-
-// Dummy cafe data
-const cafes = [
-  { name: "Cafe Mocha", lat: 28.6139, lng: 77.2090 },
-  { name: "Starbucks", lat: 28.6145, lng: 77.2020 },
-  { name: "Coffee Bean", lat: 28.6150, lng: 77.2150 },
-];
+import React, { useState } from "react";
+import { Plus, Users, Film, Coffee, Smile, Send, Star } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
-  const [userLocation, setUserLocation] = useState({ lat: 0, lng: 0 });
-  const [distances, setDistances] = useState([]);
+  const { user } = useAuth();
 
-  // Get user location
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setUserLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      });
+  const [groups, setGroups] = useState([
+    { id: 1, name: "Friends Night", members: 5 },
+    { id: 2, name: "Movie Club", members: 8 },
+    { id: 3, name: "Weekend Trips", members: 4 },
+  ]);
+
+  const [suggestions] = useState([
+    { type: "Movie", name: "Inception", rating: 8.8, icon: Film },
+    { type: "Cafe", name: "Cafe Mocha", rating: 4.5, icon: Coffee },
+    { type: "Hangout", name: "Lakeside Park", rating: 4.7, icon: Smile },
+  ]);
+
+  const [messageInput, setMessageInput] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  const handleCreateGroup = () => {
+    const newGroup = { id: Date.now(), name: "New Group", members: 1 };
+    setGroups([...groups, newGroup]);
+  };
+
+  const handleSendMessage = () => {
+    if (messageInput.trim()) {
+      setMessages([...messages, messageInput]);
+      setMessageInput('');
     }
-  }, []);
+  };
 
-  // Calculate distances using Haversine formula
-  useEffect(() => {
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
-      const R = 6371; // km
-      const dLat = ((lat2 - lat1) * Math.PI) / 180;
-      const dLon = ((lon2 - lon1) * Math.PI) / 180;
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos((lat1 * Math.PI) / 180) *
-          Math.cos((lat2 * Math.PI) / 180) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    };
-
-    const distArr = cafes.map((cafe) => ({
-      ...cafe,
-      distance: calculateDistance(
-        userLocation.lat,
-        userLocation.lng,
-        cafe.lat,
-        cafe.lng
-      ).toFixed(2),
-    }));
-
-    setDistances(distArr);
-  }, [userLocation]);
+  const cardClasses = "bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition"; // Common card styling
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+    <div
+      className="min-h-screen p-6 mt-10"
+      style={{
+        background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+      }}
+    >
+      {/* Header */}
+      <header className="flex items-center justify-between mb-8">
+        <h2 className="text-2xl text-gray-800 font-bold">Welcome, {user?.name || "Welcome Dashboard"}</h2>
+      </header>
 
-      {/* Groups */}
-      <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Your Groups</h2>
-        <ul className="list-disc list-inside">
-          {groups.map((group, index) => (
-            <li key={index}>{group}</li>
+      {/* Groups Section */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Your Groups</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {groups.map((group) => (
+            <div key={group.id} className={cardClasses}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold">{group.name}</h3>
+                <span className="text-sm text-gray-500">{group.members} members</span>
+              </div>
+              <div className="flex gap-3 mt-2">
+                <button className="flex-1 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-400 flex items-center justify-center gap-2 transition font-bold">
+                  <Users className="w-4 h-4" /> Join
+                </button>
+                <button className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center justify-center gap-2 transition font-bold">
+                  View
+                </button>
+              </div>
+            </div>
           ))}
-        </ul>
-      </div>
+        </div>
+      </section>
 
-      {/* NavLinks */}
-      <div className="mb-6">
-        <Link
-          to="/tmdb"
-          className="text-blue-500 hover:underline mr-4"
-        >
-          TMDB
-        </Link>
-        <Link
-          to="/find-cafe"
-          className="text-green-500 hover:underline"
-        >
-          Find Cafe Near You
-        </Link>
-      </div>
+      {/* Suggestions Section */}
+      <section className="mb-10">
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Smart Suggestions</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {suggestions.map((item, idx) => {
+            const IconComponent = item.icon;
+            return (
+              <div key={idx} className={cardClasses}>
+                <div className="flex items-center gap-3 mb-3">
+                  <IconComponent
+                    className={`w-6 h-6 ${
+                      item.type === "Movie"
+                        ? "text-indigo-600"
+                        : item.type === "Cafe"
+                        ? "text-yellow-500"
+                        : "text-green-500"
+                    }`}
+                  />
+                  <h3 className="font-bold">{item.name}</h3>
+                </div>
+                <p className="text-gray-500">
+                  <Star className="w-4 h-4 inline mr-1 fill-yellow-400 text-yellow-400" />
+                  Rating: {item.rating}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Map */}
-      <div className="mb-6 h-[400px]">
-        <MapContainer
-          center={[userLocation.lat, userLocation.lng]}
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution="&copy; OpenStreetMap contributors"
-          />
-          <Marker position={[userLocation.lat, userLocation.lng]}>
-            <Popup>Your Location</Popup>
-          </Marker>
-          {cafes.map((cafe, index) => (
-            <Marker key={index} position={[cafe.lat, cafe.lng]}>
-              <Popup>
-                {cafe.name} - {distances[index]?.distance} km away
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
+      {/* Chat Section */}
+      <section>
+        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Group Chat / Polls</h2>
+        <div className={cardClasses + " flex flex-col gap-4"}>
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-gray-600 font-semibold">Plan movie night?</span>
+            <div className="flex gap-2">
+              <button className="px-2 py-1 bg-blue-100 rounded-full hover:bg-blue-200 transition text-lg">👍</button>
+              <button className="px-2 py-1 bg-red-100 rounded-full hover:bg-red-200 transition text-lg">❤️</button>
+              <button className="px-2 py-1 bg-yellow-100 rounded-full hover:bg-yellow-200 transition text-lg">😂</button>
+            </div>
+          </div>
 
-      {/* Cafe distances */}
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Nearby Cafes</h2>
-        <ul className="list-disc list-inside">
-          {distances.map((cafe, index) => (
-            <li key={index}>
-              {cafe.name} - {cafe.distance} km away
-            </li>
-          ))}
-        </ul>
-      </div>
+          <div className="bg-gray-100 rounded-lg p-4 h-32 overflow-y-auto mb-4">
+            {messages.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No messages yet...</p>
+            ) : (
+              <div className="space-y-2">
+                {messages.map((msg, idx) => (
+                  <div key={idx} className="bg-white p-2 rounded text-gray-800 text-sm">
+                    {msg}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Type a message..."
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+              className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              onClick={handleSendMessage}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center gap-2 font-bold"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

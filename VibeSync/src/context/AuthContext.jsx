@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { loginApi,getProfileApi } from '../apis/api';
+import { loginApi, getProfileApi } from '../apis/api';
 import Loader from '../components/Loader';
 
 const AuthContext = createContext(null);
@@ -11,13 +11,15 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  // Initialize user from localStorage if exists
   const [user, setUser] = useState(() => {
-    // Initialize user from localStorage if exists
     const saved = localStorage.getItem('vibeSyncUser');
     return saved ? JSON.parse(saved) : null;
   });
+
   const [loading, setLoading] = useState(true);
 
+  // Fetch fresh user info if token exists
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -25,17 +27,17 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    // Fetch latest user info but don't logout immediately
     const fetchUser = async () => {
       try {
-        const res = await fetch(`${getProfileApi}`, {
+        const res = await fetch(getProfileApi, {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         if (res.ok) {
           const data = await res.json();
-          setUser(data);
-          localStorage.setItem('vibeSyncUser', JSON.stringify(data));
+          const userData = data.user || data; // normalize user object
+          setUser(userData);
+          localStorage.setItem('vibeSyncUser', JSON.stringify(userData));
         } else if (res.status === 401) {
           logout(); // token invalid
         }
@@ -49,8 +51,9 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
+  // Login function
   const login = async (email, password) => {
-    const response = await fetch(`${loginApi}`, {
+    const response = await fetch(loginApi, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -58,17 +61,17 @@ export const AuthProvider = ({ children }) => {
 
     const data = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.message || 'Invalid credentials');
-    }
+    if (!response.ok) throw new Error(data.message || 'Invalid credentials');
 
-    if (data.token) localStorage.setItem('token', data.token);
-    localStorage.setItem('vibeSyncUser', JSON.stringify(data.user || data));
-    setUser(data.user || data);
+    const userData = data.user || data; // normalize user object
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('vibeSyncUser', JSON.stringify(userData));
+    setUser(userData);
 
     return data;
   };
 
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('vibeSyncUser');
@@ -77,15 +80,16 @@ export const AuthProvider = ({ children }) => {
 
   if (loading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px',
-       
-      }}>
-       <Loader/>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          fontSize: '18px',
+        }}
+      >
+        <Loader />
       </div>
     );
   }
