@@ -14,7 +14,8 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); setMessage("");
+    setError("");
+    setMessage("");
 
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match");
@@ -23,20 +24,19 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `${resetPasswordApi}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, newPassword }),
-        }
-      );
+      const response = await fetch(`${resetPasswordApi}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, newPassword }),
+      });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Failed to reset password");
+      if (!response.ok)
+        throw new Error(data.message || "Failed to reset password");
 
       setMessage(data.message);
-      setNewPassword(""); setConfirmPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
       setTimeout(() => navigate("/signin"), 2000);
     } catch (err) {
       setError(err.message || "Something went wrong");
@@ -46,13 +46,21 @@ const ResetPassword = () => {
   };
 
   return (
-    <Container className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-tr from-[#e9e8ff] via-[#f6f5ff] to-[#dbd2fa]">
-      <Card className="max-w-md w-full p-10 bg-gradient-to-tr from-[#f9f8ff] via-[#f3f1ff] to-[#e5ddff] rounded-3xl shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-4 text-[#6b4eff]">Reset Password</h2>
-        <p className="text-center text-gray-600 mb-6">Enter your new password to update your account.</p>
+    <Container className="min-h-screen flex items-center justify-center px-4 bg-linear-to-tr from-[#e9e8ff] via-[#f6f5ff] to-[#dbd2fa]">
+      <Card className="max-w-md w-full p-10 bg-linear-to-tr from-[#f9f8ff] via-[#f3f1ff] to-[#e5ddff] rounded-3xl shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-4 text-[#6b4eff]">
+          Reset Password
+        </h2>
+        <p className="text-center text-gray-600 mb-6">
+          Enter your new password to update your account.
+        </p>
 
-        {error && <p className="text-red-500 text-center text-sm mb-4">{error}</p>}
-        {message && <p className="text-green-600 text-center text-sm mb-4">{message}</p>}
+        {error && (
+          <p className="text-red-500 text-center text-sm mb-4">{error}</p>
+        )}
+        {message && (
+          <p className="text-green-600 text-center text-sm mb-4">{message}</p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -71,7 +79,11 @@ const ResetPassword = () => {
             required
             className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6b4eff] transition"
           />
-          <CTAButton type="submit" disabled={loading} className=" w-full py-3 font-semibold">
+          <CTAButton
+            type="submit"
+            disabled={loading}
+            className=" w-full py-3 font-semibold"
+          >
             {loading ? "Updating..." : "Update Password"}
           </CTAButton>
         </form>
