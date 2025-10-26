@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { api } from "../apis/api";
+import { getProfileApi,updateProfileApi } from "../apis/api";
 
 const Profile = () => {
   const { user, checkAuth } = useAuth();
@@ -25,7 +25,7 @@ const Profile = () => {
     if (!user?._id) return;
     try {
       const res = await fetch(
-        `${api}/messages/${user._id}`
+        `${getProfileApi}/messages/${user._id}`
       );
       const data = await res.json();
       setMessages(data || []);
@@ -90,7 +90,7 @@ const Profile = () => {
 
     try {
       const res = await fetch(
-        `${api}/users/avatar`,
+        `${updateProfileApi}/users/avatar`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` },

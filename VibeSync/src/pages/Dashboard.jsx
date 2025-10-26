@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Plus, Users, Film, Coffee, Smile, Send, Star } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
+
 const Dashboard = () => {
   const { user } = useAuth();
 

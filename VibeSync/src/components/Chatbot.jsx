@@ -3,6 +3,7 @@ import { IoSend } from 'react-icons/io5';
 import { TbMessageChatbot } from 'react-icons/tb';
 import { X } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
+import { geminiApi } from "../apis/api"
 
 const Chatbot = () => {
     const [message, setMessage] = useState("");
@@ -31,7 +32,7 @@ const Chatbot = () => {
                 return;
             }
 
-            const ai = new GoogleGenAI({ apiKey: "AIzaSyACW742hbTpcZ20mRuinjLtjnMZHgJijpU" });
+            const ai = new GoogleGenAI({ apiKey: `${geminiApi}` });
             const result = await ai.models.generateContent({
                 model: "gemini-2.5-flash",
                 contents: msg
@@ -68,7 +69,12 @@ const Chatbot = () => {
 
             {/* Chat Window */}
             {isChatOpen && (
-                <div className="fixed bottom-6 right-6 w-80 md:w-96 h-[500px]  rounded-xl shadow-2xl flex flex-col overflow-hidden z-50">
+                <div className="fixed bottom-6 right-6 w-80 md:w-96 h-[500px]  rounded-xl shadow-2xl flex flex-col overflow-hidden z-50"
+                    style={{
+                        background:
+                            "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)",
+                    }}
+                >
                     {/* Header */}
                     <div className="bg-indigo-600 text-white flex justify-between items-center px-4 py-3">
                         <span className="font-semibold text-lg">Chatbot</span>
@@ -83,8 +89,8 @@ const Chatbot = () => {
                             <div
                                 key={idx}
                                 className={`max-w-[80%] px-4 py-2 rounded-2xl break-words whitespace-pre-wrap ${msg.type === "user"
-                                        ? "bg-blue-500 text-white self-end rounded-br-none"
-                                        : "bg-gray-200 text-gray-800 self-start rounded-bl-none"
+                                    ? "bg-blue-500 text-white self-end rounded-br-none"
+                                    : "bg-gray-200 text-gray-800 self-start rounded-bl-none"
                                     }`}
                             >
                                 {msg.text}

@@ -65,3 +65,25 @@ export const sendMessageApi = `${api}/messages`;
 export const getMessagesByGroupApi = (groupId) => `${api}/messages/${groupId}`;
 export const deleteMessageApi = (messageId) => `${api}/messages/${messageId}`;
 
+export const fetchMovies = async () => {
+  try {
+    const response = await fetch(
+      "https://www.omdbapi.com/?s=2025&type=movie&apikey=e129e57c"
+    );
+    const data = await response.json();
+    if (data.Search) {
+      return data.Search.slice(0, 10).map((m) => ({
+        ...m,
+        genre: "Action, Adventure",
+        rating: (Math.random() * 2 + 7).toFixed(1),
+        title: m.Title,
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    return [];
+  }
+};
+
+export const geminiApi = "AIzaSyACW742hbTpcZ20mRuinjLtjnMZHgJijpU"

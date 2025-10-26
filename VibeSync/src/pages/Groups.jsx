@@ -4,7 +4,7 @@ import {
   Settings, Home, Send, Vote, Zap, Check, ChevronRight,
   AlertCircle, LogIn, Star, MapPin, Loader, X
 } from 'lucide-react';
-
+import { fetchMovies } from "../apis/api";
 // Firebase imports
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, set, get, remove, onValue, off } from 'firebase/database';
@@ -265,6 +265,8 @@ const Groups = () => {
   const [pollOptions, setPollOptions] = useState(['', '']);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [movies, setMovies] = useState([]);
+
 
   const moods = [
     { value: 'chill', label: 'Chill', icon: '😎', color: 'from-blue-400 to-blue-600' },
@@ -296,11 +298,7 @@ const Groups = () => {
     ],
   };
 
-  const movies = [
-    { title: 'Dune: Part Two', genre: 'Sci-Fi', rating: 4.7 },
-    { title: 'The Brutalist', genre: 'Drama', rating: 4.6 },
-    { title: 'Oppenheimer', genre: 'Biography', rating: 4.8 },
-  ];
+
 
   useEffect(() => {
     localStorage.setItem('vp_accounts', JSON.stringify(accounts));
@@ -335,6 +333,14 @@ const Groups = () => {
 
     return () => unsubscribe?.();
   }, [selectedGroup, currentAccount]);
+
+  useEffect(() => {
+    const getMovies = async () => {
+      const data = await fetchMovies();
+      setMovies(data);
+    };
+    getMovies();
+  }, []);
 
   const showError = (msg) => setError(msg);
   const showSuccessMsg = (msg) => setSuccess(msg);
@@ -811,7 +817,7 @@ const Groups = () => {
 
             {/* Mood & Suggestions */}
             <div className=" rounded-2xl shadow-xl p-6"
-            style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
+              style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
             >
               <h2 className="text-2xl font-bold text-purple-600 mb-4 flex items-center gap-2">
                 <Zap className="w-6 h-6" />
@@ -900,7 +906,7 @@ const Groups = () => {
 
                   {/* Create new poll */}
                   <div className=" p-6 rounded-xl border-2 border-gray-300 space-y-3"
-                style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
                   >
                     <h3 className="font-bold text-gray-700 flex items-center gap-2">
                       <Plus className="w-4 h-4" />
@@ -954,7 +960,7 @@ const Groups = () => {
           {/* Sidebar */}
           <div className="lg:col-span-2 space-y-6">
             {/* Members */}
-            <div className = "rounded-2xl shadow-xl p-6"style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}>
+            <div className="rounded-2xl shadow-xl p-6" style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}>
               <h2 className="text-xl font-bold text-purple-600 mb-4 flex items-center gap-2">
                 <Users className="w-5 h-5" />
                 Members ({Object.keys(members).length})
@@ -986,16 +992,20 @@ const Groups = () => {
             </div>
 
             {/* Movies */}
-            <div className="rounded-2xl shadow-xl p-6"
-            style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
+            <div
+              className="rounded-2xl shadow-xl p-6"
+              style={{ background: "linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%)" }}
             >
               <h2 className="text-xl font-bold text-purple-600 mb-4 flex items-center gap-2">
                 <Music className="w-5 h-5" />
                 🎬 Movies
               </h2>
               <div className="space-y-3">
-                {movies.map((m, idx) => (
-                  <div key={idx} className="bg-blue-50 p-3 rounded-lg border-2 border-blue-200 hover:shadow-md transition">
+                {movies.slice(0, 6).map((m, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-blue-50 p-3 rounded-lg border-2 border-blue-200 hover:shadow-md transition"
+                  >
                     <p className="font-bold text-sm text-gray-800">{m.title}</p>
                     <p className="text-xs text-gray-600">{m.genre}</p>
                     <p className="text-lg font-bold text-purple-600 mt-1 flex items-center gap-1">
