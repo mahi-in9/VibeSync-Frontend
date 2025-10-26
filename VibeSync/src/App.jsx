@@ -21,6 +21,7 @@ import Profile from './pages/Profile';
 import TmbdMovie from './pages/TmbdMovie';
 import FindCafe from './pages/FindCafe';
 import ResetPassword from './pages/ResetPassword';
+import Chatbot from './components/Chatbot';
 
 const App = () => {
   const location = useLocation();
@@ -54,7 +55,7 @@ const App = () => {
         <Route path='tmbd' element = {<TmbdMovie element = {TmbdMovie}/>} />
         <Route path='find-cafe' element = {<FindCafe element = {FindCafe}/>} />
       </Routes>
-
+      <Chatbot/>
       {!isAuthPage && <Footer />}
     </div>
   );
