@@ -49,9 +49,9 @@ const Profile = () => {
       });
 
       const data = await res.json();
-      setAvatar(data.avatar); // updated avatar from backend
+      setAvatar(data.avatar);
       setNewAvatar(null);
-      checkAuth(); // refresh user data in context
+      checkAuth();
     } catch (err) {
       console.error("Failed to upload avatar:", err);
     } finally {

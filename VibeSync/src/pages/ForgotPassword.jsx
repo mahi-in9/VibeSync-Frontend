@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import {forgotPasswordApi } from "../apis/api";
 import { StyledButton } from "../components/StyleWrapper";
 
 const ForgotPassword = () => {
@@ -17,7 +18,7 @@ const ForgotPassword = () => {
       setLoading(true);
 
       const response = await fetch(
-        "https://vibesync-backend-1.onrender.com/api/auth/forgot-password",
+        `${forgotPasswordApi}`,
         {
           method: "POST",
           headers: {

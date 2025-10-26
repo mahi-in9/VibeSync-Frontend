@@ -24,6 +24,34 @@ export const CTAButton = styled.button`
   }
 `;
 
+export const VibeButton = styled.button`
+background-color: #6b4eff;
+  color: white;
+  font-size: 1rem;
+  text-align:center;
+  justyfy-content:center;
+  font-weight: 700;
+  padding: 14px 60px;
+  border-radius: 2em;
+  cursor: pointer;
+  border: none;
+  width:100%;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 1px 5px 0 0 #4e36b8;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 1px 8px 0 0 #4e36b8;
+  }
+
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 0 #4e36b8;
+  }
+`;
+
 export const CTASection = styled.section`
   min-height: 70vh;
   display: flex;
@@ -132,4 +160,20 @@ export const StyledButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+`;
+export const Container = styled.div`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e9e8ff 0%, #f6f5ff 50%, #dbd2fa 100%);
+`;
+export const Card = styled.div`
+  max-width: 400px;
+  width: 100%;
+  padding: 2.5rem;
+  border-radius: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #f9f8ff 0%, #f3f1ff 50%, #e5ddff 100%);
 `;

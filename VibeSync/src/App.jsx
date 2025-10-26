@@ -18,6 +18,9 @@ import ForgotPassword from './pages/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import Profile from './pages/Profile';
+import TmbdMovie from './pages/TmbdMovie';
+import FindCafe from './pages/FindCafe';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
   const location = useLocation();
@@ -36,6 +39,8 @@ const App = () => {
         <Route path="/termofservices" element={<TermofServices />} />
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path='/reset-password' element = {<ResetPassword/>}/>
+        
 
         <Route path="/signin" element={<PublicRoute element={Signin} />} />
         <Route path="/signup" element={<PublicRoute element={Signup} />} />
@@ -46,6 +51,8 @@ const App = () => {
         <Route path="/setting" element={<ProtectedRoute element={Setting} />} />
         <Route path="/events" element={<ProtectedRoute element={Events} />} />
         <Route path="/groups" element={<ProtectedRoute element={Groups} />} />
+        <Route path='tmbd' element = {<TmbdMovie element = {TmbdMovie}/>} />
+        <Route path='find-cafe' element = {<FindCafe element = {FindCafe}/>} />
       </Routes>
 
       {!isAuthPage && <Footer />}
