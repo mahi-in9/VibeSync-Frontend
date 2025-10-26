@@ -31,16 +31,13 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `${registerApi}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        }
-      );
+      const response = await fetch(`${registerApi}`, {
+        method: "POST",
+        headers: {
+          // "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
       const data = await response.json();
 
@@ -179,4 +176,3 @@ const Signup = () => {
 };
 
 export default Signup;
-

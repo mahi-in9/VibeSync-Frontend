@@ -1,12 +1,12 @@
-
-export const api = "https://vibesync-backend-2.onrender.com/api";
+export const api = "http://localhost:8000/api";
 
 /* -------------------------- AUTH ROUTES -------------------------- */
 export const loginApi = `${api}/auth/login`;
 export const registerApi = `${api}/auth/register`;
 export const forgotPasswordApi = `${api}/auth/forgot-password`;
 export const resetPasswordApi = `${api}/auth/reset-password`;
-export const verifyResetTokenApi = (token) => `${api}/auth/reset-password/${token}`;
+export const verifyResetTokenApi = (token) =>
+  `${api}/auth/reset-password/${token}`;
 
 /* -------------------------- USER ROUTES -------------------------- */
 export const getProfileApi = `${api}/me`;
@@ -24,7 +24,8 @@ export const createGroupApi = `${api}/groups`;
 export const joinGroupApi = (groupId) => `${api}/groups/${groupId}/join`;
 export const leaveGroupApi = (groupId) => `${api}/groups/${groupId}/leave`;
 export const deleteGroupApi = (groupId) => `${api}/groups/${groupId}`;
-export const requestToJoinGroupApi = (groupId) => `${api}/groups/${groupId}/request-to-join`;
+export const requestToJoinGroupApi = (groupId) =>
+  `${api}/groups/${groupId}/request-to-join`;
 
 // Member management
 export const promoteMemberApi = (groupId, memberId) =>
@@ -64,6 +65,7 @@ export const closePollApi = (pollId) => `${api}/polls/${pollId}/close`;
 export const sendMessageApi = `${api}/messages`;
 export const getMessagesByGroupApi = (groupId) => `${api}/messages/${groupId}`;
 export const deleteMessageApi = (messageId) => `${api}/messages/${messageId}`;
+<<<<<<< HEAD
 
 export const fetchMovies = async () => {
   try {
@@ -87,3 +89,5 @@ export const fetchMovies = async () => {
 };
 
 export const geminiApi = "AIzaSyACW742hbTpcZ20mRuinjLtjnMZHgJijpU"
+=======
+>>>>>>> main
