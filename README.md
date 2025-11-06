@@ -48,11 +48,6 @@ Frontend: [Live VibeSync App](https://vibe-sync-frontend-git-main-mahi2.vercel.a
 
 ---
 
-## 🎥 Video Walkthrough of the Project
-
-[Click Here – Project Walkthrough](#) _(Add YouTube link when ready)_
-
----
 
 ## ✨ Features
 
@@ -134,3 +129,4 @@ Find groups and you can create your own also
 ### 🤖 Bot
 
 ![Bot](screenshot/bot.png)
+---
