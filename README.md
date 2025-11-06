@@ -6,7 +6,7 @@
 From hangouts to trips, VibeSync eliminates endless group chats by letting users **create groups**, **vote on plans**, and receive **personalized suggestions** based on collective vibes.
 
 This app brings the convenience of collaborative planning, emotion-driven suggestions, and real-time voting to one intuitive interface.  
-Developed with **React.js**, **Vite**, and **Firebase Authentication**, it focuses on seamless UI/UX, interactivity, and group coordination.
+Developed with **React.js**, **Vite**, and **Local Authentication**, it focuses on seamless UI/UX, interactivity, and group coordination.
 
 ---
 
