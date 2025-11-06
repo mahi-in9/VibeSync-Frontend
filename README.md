@@ -1,6 +1,7 @@
 # 🎶 VibeSync – Plan Together, Effortlessly
 
 ## Introduction
+
 **VibeSync** is a smart, mood-based group planning web application designed to simplify decision-making among friends, families, or teams.  
 From hangouts to trips, VibeSync eliminates endless group chats by letting users **create groups**, **vote on plans**, and receive **personalized suggestions** based on collective vibes.
 
@@ -10,16 +11,19 @@ Developed with **React.js**, **Vite**, and **Firebase Authentication**, it focus
 ---
 
 ## Project Type
+
 **Full-Stack Web Application (Frontend-focused)**
 
 ---
 
 ## Deployed Application
+
 Frontend: [Live VibeSync App](https://vibe-sync-frontend-git-main-mahi2.vercel.app/)
 
 ---
 
 ## Directory Structure
+
 /
 ├── README.md
 ├── public/
@@ -42,14 +46,11 @@ Frontend: [Live VibeSync App](https://vibe-sync-frontend-git-main-mahi2.vercel.a
 ├── package.json
 └── tailwind.config.js
 
-
 ---
 
 ## 🎥 Video Walkthrough of the Project
-[Click Here – Project Walkthrough](#) *(Add YouTube link when ready)*  
 
-## 🎥 Video Walkthrough of the Codebase
-[Click Here – Codebase Walkthrough](#) *(Add YouTube link when ready)*  
+[Click Here – Project Walkthrough](#) _(Add YouTube link when ready)_
 
 ---
 
@@ -73,16 +74,16 @@ Frontend: [Live VibeSync App](https://vibe-sync-frontend-git-main-mahi2.vercel.a
 - **🔐 Secure Authentication**:  
   Firebase authentication ensures safe and easy logins via email or Google.
 
-- **🌙 Dark/Light Theme Mode** *(optional)*:  
+- **🌙 Dark/Light Theme Mode** _(optional)_:  
   Theme toggle support for better accessibility and user experience.
 
 ---
 
 ## 🧠 Design Decisions & Assumptions
 
-- Designed with a **mobile-first approach** for accessibility and user convenience.  
-- Built with **component reusability** and **scalable architecture** in mind.  
-- Firebase was chosen for authentication to streamline onboarding and reduce backend overhead.  
+- Designed with a **mobile-first approach** for accessibility and user convenience.
+- Built with **component reusability** and **scalable architecture** in mind.
+- Firebase was chosen for authentication to streamline onboarding and reduce backend overhead.
 - Future-ready design — ready for AI-based recommendation engine integration.
 
 ---
@@ -103,3 +104,33 @@ npm install
 
 # Start the development server
 npm run dev
+
+```
+
+## 📸Screenshot
+
+### 🛬 Landing
+
+![Landing Page](screenshot/landing.png)
+
+### 👥Groups
+
+![Groups Page](screenshot/group.png)
+
+Find groups and you can create your own also
+
+### 🖼️ Dashboard
+
+![Dashboard](screenshot/dashboard.png)
+
+### 👤 Profile
+
+![Profile](screenshot/profile.png)
+
+### ⚙️ Features
+
+![Features](screenshot/features.png)
+
+### 🤖 Bot
+
+![Bot](screenshot/bot.png)
