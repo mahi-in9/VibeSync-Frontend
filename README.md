@@ -130,3 +130,7 @@ Find groups and you can create your own also
 
 ![Bot](screenshot/bot.png)
 ---
+
+## 🏷️ Tags / Topics
+`fullstack` • `mern` • `react` • `vite` • `tailwindcss` • `nodejs` • `express` • `mongodb` • `restapi` • `firebase-auth` • `vibe-sync` • `plan-my-outlings` • `sustainability` • `javascript` • `webapp` • `frontend` • `backend` • `vercel`
+
